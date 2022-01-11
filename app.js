@@ -115,6 +115,6 @@ app.post("/app_proxy/blocks", async (req, res) => {
   res.status(200).end();
 });
 
-app.listen(80, () => {
+app.listen(process.env.PORT || 80, () => {
   console.log("your app is now listening on port");
 });
