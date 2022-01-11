@@ -11,9 +11,7 @@ const btaSdk = require("./bta/index");
 const {
   API_KEY,
   API_SECRET_KEY,
-  SCOPES,
   SHOP,
-  HOST,
   BTA_API_KEY,
   BTA_API_KEY_SECRET,
   BTA_API_TOKEN,
@@ -54,7 +52,7 @@ const shopifyConfig = {
   shopify_api_key: API_KEY,
   shopify_shared_secret: API_SECRET_KEY,
   shopify_scope: scopes,
-  redirect_uri: HOST + "/finish_auth",
+  redirect_uri: process.env.PORT + "/finish_auth",
   nonce: state,
 };
 
