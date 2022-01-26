@@ -1,14 +1,13 @@
 require("dotenv").config();
 
 const express = require("express");
-const shopifyAPI = require("./node_modules/shopify-node-api/lib/shopify");
+const shopifyAPI = require("shopify-node-api");
 const app = express();
 const path = require("path");
 const bodyParser = require("body-parser");
 
 const nonce = require("nonce")();
 const btaSdk = require("./bta/index");
-const query = require("express/lib/middleware/query");
 const {
   API_KEY,
   API_SECRET_KEY,
@@ -53,7 +52,7 @@ const shopifyConfig = {
   shopify_api_key: API_KEY,
   shopify_shared_secret: API_SECRET_KEY,
   shopify_scope: scopes,
-  redirect_uri: process.env.DEVPORT + "/finish_auth",
+  redirect_uri: process.env.PORT + "/finish_auth",
   nonce: state,
 };
 
@@ -77,48 +76,24 @@ app.get("/", (req, res) => {
   try {
     const auth_url = Shopify.buildAuthURL();
     // res.send("Hello world!");
-    // console.log(auth_url);
     res.redirect(auth_url);
   } catch (error) {
     console.log(error, "Error!");
   }
 });
 
-app.get("/home", (req, res) => {
-  try {
-    res.send("hello world");
-  } catch (error) {
-    console.log(error, "Error!");
-  }
-});
-
-app.post("/webhook", async (req, res) => {
-  console.log(req);
-
-  res.send("allgood");
-  res.status(200).end();
-});
-
-app.get("/hooks", (req, res) => {
-  res.send("allgood");
-  res.status(200).end();
-});
-
 app.get("/finish_auth", (req, res) => {
-  var Shopify = new shopifyAPI(shopifyConfig),
+  const Shopify = new shopifyAPI(shopifyConfig),
     query_params = req.query;
-  console.log(query_params, "before exchange");
   Shopify.exchange_temporary_token(query_params, function (err, data) {
     // This will return successful if the request was authentic from Shopify
     // Otherwise err will be non-null.
     // The module will automatically update your config with the new access token
-    console.log(query_params, "in exchange");
   });
-  res.send("hello");
 });
 
 app.get("/blocks", (req, res) => {
-  res.send("hello there");
+  res.send("hello");
 });
 
 app.get("/app_proxy", (req, res) => {
@@ -132,6 +107,8 @@ app.post("/app_proxy/blocks", async (req, res) => {
   const blocks = await btaApi.getBlocks(req.body).then(async (response) => {
     return await response.data.blocks;
   });
+
+  console.log(blocks, "BLocks");
   res.json({ blocks: blocks });
   res.status(200).end();
 });
