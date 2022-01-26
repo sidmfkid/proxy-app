@@ -100,11 +100,6 @@ app.post("/webhook", async (req, res) => {
 });
 
 app.get("/hooks", (req, res) => {
-  console.log(req);
-  // const Shopify = new shopifyAPI({shopName: '24k-nail-spa', accessToken: });
-
-  // console.log();
-
   res.send("allgood");
   res.status(200).end();
 });
@@ -119,32 +114,10 @@ app.get("/finish_auth", (req, res) => {
     // The module will automatically update your config with the new access token
     console.log(query_params, "in exchange");
   });
-  Shopify.is_valid_signature(query_params);
-  Shopify.set_access_token(query_params.code);
-  Shopify.get("/admin/products.json", function (err, data, headers) {
-    console.log(data); // Data contains product json information
-    console.log(headers); // Headers returned from request
-  });
   res.send("hello");
 });
 
-function callback(err, data, headers) {
-  var api_limit = headers["http_x_shopify_shop_api_call_limit"];
-  console.log(api_limit); // "1/40"
-}
-
 app.get("/blocks", (req, res) => {
-  const Shopify = new shopifyAPI({
-    shop: process.env.SHOP,
-    shopify_api_key: process.env.API_KEY,
-    shopify_shared_secret: process.env.API_SECRET_KEY,
-    access_token:
-      "de39ac2941903c94610c2978082c7b14b95ff49d5fadd5fcce27d8502b7e0a26",
-  });
-
-  console.log(Shopify);
-
-  console.log(req.query);
   res.send("hello there");
 });
 
@@ -159,12 +132,6 @@ app.post("/app_proxy/blocks", async (req, res) => {
   const blocks = await btaApi.getBlocks(req.body).then(async (response) => {
     return await response.data.blocks;
   });
-
-  // const staff = await btaApi.getBlocks(req.body).then(async (response) => {
-  //   return await response.data.;
-  // });
-
-  console.log(blocks, "BLocks");
   res.json({ blocks: blocks });
   res.status(200).end();
 });
@@ -183,18 +150,6 @@ app.post("/app_proxy/bta-products", async (req, res) => {
       productResources = item.resources;
     }
   });
-  console.log(btaProducts);
-  console.log(productResources);
-
-  // const blocks = await btaApi.getBlocks(req.body).then(async (response) => {
-  //   return await response.data.blocks;
-  // });
-
-  // const staff = await btaApi.getBlocks(req.body).then(async (response) => {
-  //   return await response.data.;
-  // });
-
-  // console.log(blocks, "BLocks");
   res.json({ staff: productResources });
   res.status(200).end();
 });
